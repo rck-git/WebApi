@@ -18,15 +18,10 @@ namespace WebApi.Controllers
 			_context = context;
 		}
 
-		private static List<SubscriberModel> _subscribers = new List<SubscriberModel>
-		{
-			new SubscriberModel {Email = "firstEmail@email.com"},
-			new SubscriberModel {Email = "2ndEmail@email.com"}
-		};
-
+		
 		//Create
 		[HttpPost]
-		public async Task<IActionResult> Subscribe(SubscriberRequestModel subscriber)
+		public async Task<IActionResult> Subscribe(SubscriberEntity subscriber)
 		{
 			try
 			{
@@ -34,8 +29,7 @@ namespace WebApi.Controllers
 				{
 					if (!await _context.Subscribers.AnyAsync(x => x.Email == subscriber.Email))
 					{
-						var subscriberEntity = new SubscriberEntity { Email = subscriber.Email };
-						_context.Subscribers.Add(subscriberEntity);
+						_context.Subscribers.Add(subscriber);
 						await _context.SaveChangesAsync();
 
 						return Created();
@@ -52,7 +46,7 @@ namespace WebApi.Controllers
 		}
 
 		[HttpDelete]
-		public async Task<IActionResult> Unsubscribe(string email)
+		public async Task<IActionResult> Unsubscribe(string email)	
 		{
 			try
 			{
@@ -90,39 +84,6 @@ namespace WebApi.Controllers
 
 		}
 
-
-
-		//[HttpGet("{id}")]
-		//public async Task<IActionResult> GetOneSubscriber(int id)
-		//{
-		//	var subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Id == id);
-		//          if (subscriber != null) 
-		//	{
-		//		return Ok(subscriber);
-
-		//	}
-		//	return NotFound();
-		//}
-
-
-
-		//[HttpPut("{id}")]
-		//public async Task<IActionResult> UpdateSubscriber(int id,string email)
-		//{
-		//	var subscriber = await _context.Subscribers.FirstOrDefaultAsync(x => x.Id == id);
-
-		//	if (subscriber != null)
-		//	{
-		//		subscriber.Email = email;
-		//		_context.Subscribers.Update(subscriber);
-
-		//		//_context.Entry(subscriber).CurrentValues.SetValues(email);
-
-		//		_context.SaveChanges();
-		//		return Ok(subscriber);
-		//	}
-		//	return NotFound();
-		//}
 
 	}
 }
